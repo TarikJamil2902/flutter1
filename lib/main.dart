@@ -103,85 +103,98 @@ class Practice1 extends StatelessWidget {
           child: Center(child: Text("Hello", style: TextStyle(fontSize: 40))),
         ),
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.black),
-              child: Column(
-                children: const [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-                    ),
-                    radius: 50,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Flutter",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ],
+      drawer: MyDrawer(),
+    );
+  }
+}
+
+class MyDrawer extends StatelessWidget {
+  const MyDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: [
+          UserAccountsDrawerHeader(
+            accountName: Text("Tarik Jamil"),
+            accountEmail: Text("tj@gmail.com"),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: ClipOval(
+                child: Image.asset(
+                  "assets/images/MyPhoto.jpg",
+                  width: 80.0,
+                  height: 80.0,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text("Home"),
-              onTap: () {
-                Navigator.pushNamed(context, '/home');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.pageview),
-              title: const Text("Practice1"),
-              onTap: () {
-                Navigator.pushNamed(context, '/page1');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text("Practice2"),
-              onTap: () {
-                Navigator.pushNamed(context, '/page2');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.pageview),
-              title: const Text("Practice3"),
-              onTap: () {
-                Navigator.pushNamed(context, '/page3');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text("Practice4"),
-              onTap: () {
-                Navigator.pushNamed(context, '/page4');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.pageview),
-              title: const Text("Practice5"),
-              onTap: () {
-                Navigator.pushNamed(context, '/page5');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text("Home"),
-              onTap: () {
-                Navigator.pushNamed(context, '/home');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.pageview),
-              title: const Text("Pageview"),
-              onTap: () {
-                Navigator.pushNamed(context, '/page5');
-              },
-            ),
-          ],
-        ),
+          ),
+
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text("Home"),
+            onTap: () {
+              // Navigator.pushNamed(context, '/home');
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Homepage()),
+              );
+            },
+          ),
+
+          ListTile(
+            leading: const Icon(Icons.pageview),
+            title: const Text("Practice1"),
+            onTap: () {
+              Navigator.pushNamed(context, '/page1');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text("Practice2"),
+            onTap: () {
+              Navigator.pushNamed(context, '/page2');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.pageview),
+            title: const Text("Practice3"),
+            onTap: () {
+              Navigator.pushNamed(context, '/page3');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text("Practice4"),
+            onTap: () {
+              Navigator.pushNamed(context, '/page4');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.pageview),
+            title: const Text("Practice5"),
+            onTap: () {
+              Navigator.pushNamed(context, '/page5');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text("Home"),
+            onTap: () {
+              Navigator.pushNamed(context, '/home');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.pageview),
+            title: const Text("Pageview"),
+            onTap: () {
+              Navigator.pushNamed(context, '/page5');
+            },
+          ),
+        ],
       ),
     );
   }
@@ -254,6 +267,7 @@ class Practice2 extends StatelessWidget {
           ],
         ),
       ),
+      drawer: MyDrawer(),
     );
   }
 }
@@ -291,6 +305,7 @@ class Practice3 extends StatelessWidget {
           ],
         ),
       ),
+      drawer: MyDrawer(),
     );
   }
 }
@@ -334,6 +349,7 @@ class Practice4 extends StatelessWidget {
           ),
         ],
       ),
+      drawer: MyDrawer(),
     );
   }
 }
@@ -432,6 +448,7 @@ class Practice5 extends StatelessWidget {
           ),
         ],
       ),
+      drawer: MyDrawer(),
     );
   }
 }
@@ -480,6 +497,8 @@ class Homepage extends StatelessWidget {
           ],
         ),
       ),
+      drawer: MyDrawer(),
     );
   }
 }
+
