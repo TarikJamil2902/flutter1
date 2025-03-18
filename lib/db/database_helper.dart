@@ -1,6 +1,6 @@
-import 'package:sqflite/sqflite.dart';
+import 'package:new_flutter_app/models/item.dart';
 import 'package:path/path.dart';
-import '../models/item.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper2 {
   static const _databaseName = "items.db";
@@ -40,7 +40,7 @@ class DatabaseHelper2 {
 
   // Initialize the database
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'items.db');
+    String path = join(await getDatabasesPath(), _databaseName);
     return openDatabase(
       path,
       onCreate: (db, version) {
@@ -57,7 +57,7 @@ class DatabaseHelper2 {
           )
           ''');
       },
-      version: 1,
+      version: _databaseVersion,
     );
   }
 
@@ -102,7 +102,7 @@ class DatabaseHelper2 {
   }
 
   // Delete an item by ID
-  Future<int> deleteItem(int id) async {
+  Future<int> deleteItem(int? id) async {
     Database db = await database;
     return await db.delete('items', where: 'id = ?', whereArgs: [id]);
   }
