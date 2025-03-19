@@ -29,7 +29,7 @@ class Practice8 extends StatefulWidget {
 }
 
 class _Practice8State extends State<Practice8> {
-  int _counter = 0;
+  final int _counter = 0;
   String? selecteditem;
   bool isSwitched = false;
   int? selectedRadio;

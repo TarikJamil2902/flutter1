@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'providers/product_provider.dart';
+import 'providers/category_provider.dart';
+import 'providers/supplier_provider.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/admin/admin_dashboard.dart';
+import 'screens/dashboard/dashboard_screen.dart';
+import 'screens/products/product_list_screen.dart';
+import 'screens/products/add_edit_product_screen.dart';
+import 'screens/categories/category_screen.dart';
+import 'screens/orders/order_screen.dart';
+import 'screens/customers/customer_screen.dart';
+import 'screens/reports/report_screen.dart';
+import 'screens/settings/settings_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -9,28 +24,50 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      darkTheme: ThemeData(primarySwatch: Colors.blueGrey),
-
-      // home: Practice3(),
-      initialRoute: "/page1",
-      routes: {
-        "/page1": (context) => Practice1(),
-        "/page2": (context) => Practice2(),
-        "/page3": (context) => Practice3(),
-        "/page4": (context) => Practice4(),
-        "/page5": (context) => Practice5(),
-        "/home": (context) => Homepage(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => CategoryProvider()),
+        ChangeNotifierProvider(create: (_) => SupplierProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Inventory Management',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.grey[50],
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            elevation: 1,
+            titleTextStyle: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        home: const LoginScreen(),
+        routes: {
+          '/login': (context) => const LoginScreen(),
+          '/admin': (context) => const AdminDashboard(),
+          '/dashboard': (context) => const DashboardScreen(),
+          '/products': (context) => const ProductListScreen(),
+          '/products/add': (context) => const AddEditProductScreen(),
+          '/categories': (context) => const CategoryScreen(),
+          '/orders': (context) => const OrderScreen(),
+          '/customers': (context) => const CustomerScreen(),
+          '/reports': (context) => const ReportScreen(),
+          '/settings': (context) => const SettingsScreen(),
+        },
+      ),
     );
   }
 }
 
 class MyAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  MyAppbar({required this.title});
+  const MyAppbar({super.key, required this.title});
 
   @override
   // TODO: implement preferredSize
@@ -49,37 +86,37 @@ class MyAppbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/home');
+            Navigator.pushNamed(context, '/admin');
           },
           icon: Icon(Icons.home),
         ),
         IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/page5');
+            Navigator.pushNamed(context, '/products');
           },
           icon: Icon(Icons.pageview),
         ),
         IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/page1');
+            Navigator.pushNamed(context, '/dashboard');
           },
           icon: Icon(Icons.search),
         ),
         IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/page4');
+            Navigator.pushNamed(context, '/products/add');
           },
           icon: Icon(Icons.cyclone),
         ),
         IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/page2');
+            Navigator.pushNamed(context, '/login');
           },
           icon: Icon(Icons.login),
         ),
         IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/page3');
+            Navigator.pushNamed(context, '/admin');
           },
           icon: Icon(Icons.logout),
         ),
@@ -91,6 +128,8 @@ class MyAppbar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class Practice1 extends StatelessWidget {
+  const Practice1({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -501,4 +540,3 @@ class Homepage extends StatelessWidget {
     );
   }
 }
-

@@ -25,7 +25,7 @@ class FormExampleApp extends StatelessWidget {
 class FormPage extends StatelessWidget {
   final String title;
   final Item? item;
-  const FormPage({required this.title, this.item, Key? key}) : super(key: key);
+  const FormPage({required this.title, this.item, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class FormPage extends StatelessWidget {
 
 class ItemForm extends StatefulWidget {
   final Item? item;
-  const ItemForm({this.item});
+  const ItemForm({super.key, this.item});
 
   @override
   State<ItemForm> createState() => _ItemFormState();
@@ -106,10 +106,11 @@ class _ItemFormState extends State<ItemForm> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != _expirationDate)
+    if (picked != null && picked != _expirationDate) {
       setState(() {
         _expirationDate = picked;
       });
+    }
   }
 
   String getFormattedDate(DateTime date) {
@@ -225,6 +226,8 @@ class _ItemFormState extends State<ItemForm> {
 }
 
 class ItemListPage extends StatefulWidget {
+  const ItemListPage({super.key});
+
   @override
   _ItemListPageState createState() => _ItemListPageState();
 }

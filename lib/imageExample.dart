@@ -6,7 +6,7 @@ void main() => runApp(Practice6(loadFromNetwork: false));
 
 class Practice6 extends StatelessWidget {
   final bool loadFromNetwork;
-  Practice6({required this.loadFromNetwork});
+  const Practice6({super.key, required this.loadFromNetwork});
 
   @override
   Widget build(BuildContext context) {
