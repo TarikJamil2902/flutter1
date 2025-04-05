@@ -277,7 +277,7 @@ class ReportScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          ...products.map((product) => _buildProductItem(product)).toList(),
+          ...products.map((product) => _buildProductItem(product)),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:new_flutter_app/Prac2.dart';
 import 'package:new_flutter_app/main.dart';
 
 void main() => runApp(Practice6(loadFromNetwork: false));
