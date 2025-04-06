@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:new_flutter_app/screens/stocks/drawer.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -18,10 +19,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Settings',
+          'Admin Dashboard',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
       ),
+      drawer: Drawer(child: DreawerWidget()),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -138,9 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          child: Column(
-            children: children,
-          ),
+          child: Column(children: children),
         ),
       ],
     );
@@ -155,17 +155,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SwitchListTile(
       title: Text(
         title,
-        style: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
+        style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
       ),
       subtitle: Text(
         subtitle,
-        style: GoogleFonts.poppins(
-          fontSize: 14,
-          color: Colors.grey[600],
-        ),
+        style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
       ),
       value: value,
       onChanged: onChanged,
@@ -183,10 +177,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       leading: icon != null ? Icon(icon, color: Colors.grey[600]) : null,
       title: Text(
         title,
-        style: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
+        style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
       ),
       trailing: trailing ?? const Icon(Icons.chevron_right),
       onTap: onTap,
@@ -197,10 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return ListTile(
       title: Text(
         'Language',
-        style: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
+        style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
       ),
       trailing: DropdownButton<String>(
         value: _language,
@@ -211,16 +199,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             });
           }
         },
-        items: <String>['English', 'Bengali', 'Hindi']
-            .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value,
-              style: GoogleFonts.poppins(),
-            ),
-          );
-        }).toList(),
+        items:
+            <String>[
+              'English',
+              'Bengali',
+              'Hindi',
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value, style: GoogleFonts.poppins()),
+              );
+            }).toList(),
       ),
     );
   }

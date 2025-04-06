@@ -7,11 +7,11 @@ import 'providers/supplier_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/admin/admin_dashboard.dart';
 import 'screens/dashboard/dashboard_screen.dart';
-import 'screens/products/product_list_screen.dart';
-import 'screens/products/add_edit_product_screen.dart';
-import 'screens/categories/category_screen.dart';
-import 'screens/orders/order_screen.dart';
-import 'screens/customers/customer_screen.dart';
+import 'screens/stocks/product_list_screen.dart';
+import 'screens/stocks/add_edit_product_screen.dart';
+import 'screens/stocks/category_screen.dart';
+import 'screens/sales/order_screen.dart';
+import 'screens/crm/customer_screen.dart';
 import 'screens/reports/report_screen.dart';
 import 'screens/settings/settings_screen.dart';
 
@@ -47,10 +47,10 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home:  AdminDashboard(),
+        home: AdminDash2(),
         routes: {
           '/login': (context) => const LoginScreen(),
-          '/admin': (context) => const AdminDashboard(),
+          '/admin': (context) => const AdminDash2(),
           '/dashboard': (context) => const DashboardScreen(),
           '/products': (context) => const ProductListScreen(),
           '/products/add': (context) => const AddEditProductScreen(),
