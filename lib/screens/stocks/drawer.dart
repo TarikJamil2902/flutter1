@@ -69,22 +69,22 @@ class DreawerWidget extends StatelessWidget {
             _buildDrawerItem(
               icon: Icons.pending_actions,
               title: "Stock In Pending",
-              path: '/reports',
+              path: '/pendingStock',
             ),
             _buildDrawerItem(
               icon: Icons.receipt,
               title: "Stock In Invoice",
-              path: '/reports',
+              path: '/stockInvoice',
             ),
             _buildDrawerItem(
               icon: Icons.list,
-              title: 'Watage list',
-              path: '/reports',
+              title: 'Wastage list',
+              path: '/wastage',
             ),
             _buildDrawerItem(
               icon: Icons.list,
               title: 'Received Stock',
-              path: '/reports',
+              path: '/recieved',
             ),
           ],
         ),
@@ -116,7 +116,7 @@ class DreawerWidget extends StatelessWidget {
           ],
         ),
         _buildDrawerItem(
-          icon: Icons.dashboard,
+          icon: Icons.report,
           title: 'Reports',
           path: '/reports',
         ),
@@ -127,12 +127,12 @@ class DreawerWidget extends StatelessWidget {
             _buildDrawerItem(
               icon: Icons.payment,
               title: 'All Payment',
-              path: '/payments',
+              path: '/allPayments',
             ),
             _buildDrawerItem(
               icon: Icons.history,
               title: 'Recent Payment',
-              path: '/payments',
+              path: '/recentPayments',
             ),
           ],
         ),
@@ -148,22 +148,22 @@ class DreawerWidget extends StatelessWidget {
             _buildDrawerItem(
               icon: Icons.group,
               title: 'Supplier List',
-              path: '/customers',
+              path: '/supplierList',
             ),
             _buildDrawerItem(
               icon: Icons.group,
               title: 'Staff List',
-              path: '/customers',
+              path: '/staff',
             ),
             _buildDrawerItem(
               icon: Icons.group,
               title: 'Distributor List',
-              path: '/customers',
+              path: '/distributorList',
             ),
             _buildDrawerItem(
               icon: Icons.group,
               title: 'Warehouse List',
-              path: '/customers',
+              path: '/wareHouse',
             ),
           ],
         ),

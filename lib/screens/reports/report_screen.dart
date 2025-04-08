@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:new_flutter_app/screens/stocks/drawer.dart';
 
 class ReportScreen extends StatelessWidget {
   const ReportScreen({super.key});
@@ -22,6 +23,7 @@ class ReportScreen extends StatelessWidget {
           ),
         ],
       ),
+      drawer: Drawer(child: DreawerWidget()),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -186,7 +188,14 @@ class ReportScreen extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+                        const labels = [
+                          'Jan',
+                          'Feb',
+                          'Mar',
+                          'Apr',
+                          'May',
+                          'Jun',
+                        ];
                         if (value.toInt() < labels.length) {
                           return Text(
                             labels[value.toInt()],
@@ -235,21 +244,9 @@ class ReportScreen extends StatelessWidget {
 
   Widget _buildTopProducts() {
     final List<Map<String, dynamic>> products = [
-      {
-        'name': 'Laptop X1',
-        'sales': 45,
-        'revenue': 44999.99,
-      },
-      {
-        'name': 'Smartphone Y2',
-        'sales': 38,
-        'revenue': 28499.50,
-      },
-      {
-        'name': 'Tablet Z3',
-        'sales': 32,
-        'revenue': 19199.99,
-      },
+      {'name': 'Laptop X1', 'sales': 45, 'revenue': 44999.99},
+      {'name': 'Smartphone Y2', 'sales': 38, 'revenue': 28499.50},
+      {'name': 'Tablet Z3', 'sales': 32, 'revenue': 19199.99},
     ];
 
     return Container(
@@ -295,10 +292,7 @@ class ReportScreen extends StatelessWidget {
               color: Colors.blue.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(
-              Icons.inventory,
-              color: Colors.blue,
-            ),
+            child: const Icon(Icons.inventory, color: Colors.blue),
           ),
           const SizedBox(width: 16),
           Expanded(

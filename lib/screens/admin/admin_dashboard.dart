@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:new_flutter_app/screens/crm/distributor.dart';
+import 'package:new_flutter_app/screens/crm/staff.dart';
+import 'package:new_flutter_app/screens/crm/supplier.dart';
+import 'package:new_flutter_app/screens/crm/warehouselist.dart';
+import 'package:new_flutter_app/screens/payments/allpayments.dart';
 import 'package:new_flutter_app/screens/stocks/drawer.dart';
 import 'package:new_flutter_app/screens/stocks/stock.dart';
 import '../dashboard/dashboard_screen.dart';
@@ -20,6 +25,12 @@ class MyProject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.dark,
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/adminDashboard',
       routes: {
@@ -31,7 +42,18 @@ class MyProject extends StatelessWidget {
         '/orders': (context) => OrderScreen(),
         '/customers': (context) => CustomerScreen(),
         '/stocks': (context) => MainStockScreen(),
+        '/pendingStock': (context) => StockInPendingScreen(),
+        '/stockInvoice': (context) => InvoiceListScreen(),
+        '/wastage': (context) => WastageListScreen(),
+        '/recieved': (context) => RecievedListScreen(),
+        '/addProduct': (context) => StockInScreen(),
         '/reports': (context) => ReportScreen(),
+        '/allPayments': (context) => AllPaymentsScreen(),
+        '/recentPayments': (context) => RecentPayments(),
+        '/distributorList': (context) => DistributorListPage(),
+        '/supplierList': (context) => SupplierPage(),
+        '/wareHouse': (context) => WarehouseScreen(),
+        '/staff': (context) => AddStaffForm(),
         '/settings': (context) => SettingsScreen(),
       },
     );

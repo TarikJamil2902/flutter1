@@ -189,7 +189,7 @@ class DashboardScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+          ), 
         ],
       ),
     );
