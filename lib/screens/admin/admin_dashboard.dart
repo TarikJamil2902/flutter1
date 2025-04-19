@@ -15,9 +15,7 @@ import '../crm/customer_screen.dart';
 import '../reports/report_screen.dart';
 import '../settings/settings_screen.dart';
 
-void main() {
-  runApp(MyProject());
-}
+
 
 class MyProject extends StatelessWidget {
   const MyProject({super.key});
@@ -25,12 +23,6 @@ class MyProject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.dark,
-        ),
-      ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/adminDashboard',
       routes: {

@@ -34,6 +34,18 @@ class MainStockScreen extends StatelessWidget {
                     foregroundColor: Colors.white,
                   ),
                 ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/addBrand");
+                    // TODO: Navigate to add product screen
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text("Add Brand"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
                 const Text(
                   "Brand Wise",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),

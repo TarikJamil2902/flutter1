@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:new_flutter_app/screens/crm/distributor.dart';
+import 'package:new_flutter_app/screens/crm/staff.dart';
+import 'package:new_flutter_app/screens/crm/supplier.dart';
+import 'package:new_flutter_app/screens/crm/warehouselist.dart';
+import 'package:new_flutter_app/screens/payments/allpayments.dart';
+import 'package:new_flutter_app/screens/stocks/brand_screen.dart';
+import 'package:new_flutter_app/screens/stocks/stock.dart';
 import 'package:provider/provider.dart';
 import 'providers/product_provider.dart';
 import 'providers/category_provider.dart';
 import 'providers/supplier_provider.dart';
+import 'models/brand.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/admin/admin_dashboard.dart';
 import 'screens/dashboard/dashboard_screen.dart';
@@ -29,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => SupplierProvider()),
+        ChangeNotifierProvider(create: (_) => BrandProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -49,16 +58,28 @@ class MyApp extends StatelessWidget {
         ),
         home: AdminDash2(),
         routes: {
-          '/login': (context) => const LoginScreen(),
-          '/admin': (context) => const AdminDash2(),
-          '/dashboard': (context) => const DashboardScreen(),
-          '/products': (context) => const ProductListScreen(),
-          '/products/add': (context) => const AddEditProductScreen(),
-          '/categories': (context) => const CategoryScreen(),
-          '/orders': (context) => const OrderScreen(),
-          '/customers': (context) => const CustomerScreen(),
-          '/reports': (context) => const ReportScreen(),
-          '/settings': (context) => const SettingsScreen(),
+          '/adminDashboard': (context) => AdminDash2(),
+          '/dashboard': (context) => DashboardScreen(),
+          '/products': (context) => ProductListScreen(),
+          '/categories': (context) => CategoryScreen(),
+          '/orders': (context) => OrderScreen(),
+          '/customers': (context) => CustomerScreen(),
+          '/stocks': (context) => MainStockScreen(),
+          '/pendingStock': (context) => StockInPendingScreen(),
+          '/stockInvoice': (context) => InvoiceListScreen(),
+          '/wastage': (context) => WastageListScreen(),
+          '/recieved': (context) => RecievedListScreen(),
+          '/addProduct': (context) => StockInScreen(),
+          '/reports': (context) => ReportScreen(),
+          '/allPayments': (context) => AllPaymentsScreen(),
+          '/recentPayments': (context) => RecentPayments(),
+          '/distributorList': (context) => DistributorListPage(),
+          '/supplierList': (context) => SupplierPage(),
+          '/wareHouse': (context) => WarehouseScreen(),
+          '/staff': (context) => AddStaffForm(),
+          '/settings': (context) => SettingsScreen(),
+          '/addBrand': (context) => AddBrandForm(),
+          '/brands': (context) => BrandScreen(),
         },
       ),
     );
