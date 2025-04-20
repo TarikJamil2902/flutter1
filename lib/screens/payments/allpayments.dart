@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class AllPaymentsScreen extends StatefulWidget {
-  const AllPaymentsScreen({Key? key}) : super(key: key);
+  const AllPaymentsScreen({super.key});
 
   @override
   State<AllPaymentsScreen> createState() => _AllPaymentsScreenState();
@@ -44,6 +44,8 @@ class _AllPaymentsScreenState extends State<AllPaymentsScreen> {
 }
 
 class RecentPayments extends StatelessWidget {
+  const RecentPayments({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

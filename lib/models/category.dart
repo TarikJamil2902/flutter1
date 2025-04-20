@@ -27,13 +27,15 @@ class Category {
 
   get productCount => null;
 
+  get categoryName => null;
+
   Map<String, dynamic> toJson() {
     return {'id': id, 'name': name, 'code': code, 'description': description};
   }
 }
 
 class CategoryService {
-  final String apiBase = 'http://192.168.0.101:8080/categories';
+  final String apiBase = 'http://localhost:8080/categories';
 
   Future<List<Category>> getCategories() async {
     final url = Uri.parse('$apiBase/getAll');

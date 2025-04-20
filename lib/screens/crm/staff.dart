@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_flutter_app/screens/stocks/drawer.dart';
 
 class AddStaffForm extends StatefulWidget {
-  const AddStaffForm({Key? key}) : super(key: key);
+  const AddStaffForm({super.key});
 
   @override
   State<AddStaffForm> createState() => _AddStaffFormState();

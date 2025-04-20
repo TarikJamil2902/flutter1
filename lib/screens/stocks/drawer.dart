@@ -6,7 +6,7 @@ class DreawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget _buildDrawerItem({
+    Widget buildDrawerItem({
       required IconData icon,
       required String title,
       VoidCallback? onTap,
@@ -51,7 +51,7 @@ class DreawerWidget extends StatelessWidget {
             ],
           ),
         ),
-        _buildDrawerItem(
+        buildDrawerItem(
           icon: Icons.dashboard,
           title: 'Dashboard',
           path: '/adminDashboard',
@@ -60,38 +60,38 @@ class DreawerWidget extends StatelessWidget {
           title: Text('Stocks', style: GoogleFonts.poppins()),
           leading: Icon(Icons.inventory),
           children: [
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.report,
               title: 'Main Stock',
-              path: '/stocks',
+              path: '/product',
             ),
 
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.pending_actions,
               title: "Stock In Pending",
               path: '/pendingStock',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.receipt,
               title: "Stock In Invoice",
               path: '/stockInvoice',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.list,
               title: 'Brand list',
               path: '/brands',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.list,
               title: 'Category list',
               path: '/categories',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.list,
               title: 'Wastage list',
               path: '/wastage',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.list,
               title: 'Received Stock',
               path: '/recieved',
@@ -102,44 +102,40 @@ class DreawerWidget extends StatelessWidget {
           title: Text('Sales', style: GoogleFonts.poppins()),
           leading: Icon(Icons.shopping_cart),
           children: [
-            _buildDrawerItem(icon: Icons.add, title: 'Sales', path: '/reports'),
-            _buildDrawerItem(
+            buildDrawerItem(icon: Icons.add, title: 'Sales', path: '/reports'),
+            buildDrawerItem(
               icon: Icons.bar_chart,
               title: 'Sales List',
               path: '/reports',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.bar_chart,
               title: 'Sales Return List',
               path: '/reports',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.bar_chart,
               title: 'Daily Sales',
               path: '/reports',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.receipt,
               title: 'Sales Invoice',
               path: '/invoice',
             ),
           ],
         ),
-        _buildDrawerItem(
-          icon: Icons.report,
-          title: 'Reports',
-          path: '/reports',
-        ),
+        buildDrawerItem(icon: Icons.report, title: 'Reports', path: '/reports'),
         ExpansionTile(
           title: Text('Payments', style: GoogleFonts.poppins()),
           leading: Icon(Icons.payment),
           children: [
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.payment,
               title: 'All Payment',
               path: '/allPayments',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.history,
               title: 'Recent Payment',
               path: '/recentPayments',
@@ -150,27 +146,27 @@ class DreawerWidget extends StatelessWidget {
           title: Text('CRM', style: GoogleFonts.poppins()),
           leading: Icon(Icons.supervisor_account),
           children: [
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.group,
               title: 'Customer List',
               path: '/customers',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.group,
               title: 'Supplier List',
               path: '/supplierList',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.group,
               title: 'Staff List',
               path: '/staff',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.group,
               title: 'Distributor List',
               path: '/distributorList',
             ),
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.group,
               title: 'Warehouse List',
               path: '/wareHouse',
@@ -181,19 +177,19 @@ class DreawerWidget extends StatelessWidget {
           title: Text('Users', style: GoogleFonts.poppins()),
           leading: Icon(Icons.people),
           children: [
-            _buildDrawerItem(
+            buildDrawerItem(
               icon: Icons.group,
               title: 'Login Registers',
               path: '/customers',
             ),
           ],
         ),
-        _buildDrawerItem(
+        buildDrawerItem(
           icon: Icons.settings,
           title: 'Settings',
           path: '/settings',
         ),
-        _buildDrawerItem(
+        buildDrawerItem(
           icon: Icons.logout,
           title: 'Logout',
           path: '/login',

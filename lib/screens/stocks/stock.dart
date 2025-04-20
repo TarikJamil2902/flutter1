@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_flutter_app/screens/stocks/drawer.dart';
 
 class MainStockScreen extends StatelessWidget {
-  const MainStockScreen({Key? key}) : super(key: key);
+  const MainStockScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class MainStockScreen extends StatelessWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
-                  headingRowColor: MaterialStateProperty.all(
+                  headingRowColor: WidgetStateProperty.all(
                     Colors.blue.shade50,
                   ),
                   border: TableBorder.all(color: Colors.blue),
@@ -517,7 +517,7 @@ class InvoiceListScreen extends StatelessWidget {
 }
 
 class WastageListScreen extends StatelessWidget {
-  const WastageListScreen({Key? key}) : super(key: key);
+  const WastageListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -553,7 +553,7 @@ class WastageListScreen extends StatelessWidget {
 }
 
 class RecievedListScreen extends StatelessWidget {
-  const RecievedListScreen({Key? key}) : super(key: key);
+  const RecievedListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

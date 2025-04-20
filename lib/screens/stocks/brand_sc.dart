@@ -4,140 +4,148 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:new_flutter_app/screens/stocks/drawer.dart';
 
-class Warehouse {
+class Brand {
   int? id;
   String name;
   String code;
-  String mobile;
-  String address;
+  String description;
+  String category;
+  String subcategory;
 
-  Warehouse({
+  Brand({
     this.id,
     required this.name,
     required this.code,
-    required this.mobile,
-    required this.address,
+    required this.description,
+    required this.category,
+    required this.subcategory,
   });
 
-  factory Warehouse.fromJson(Map<String, dynamic> json) {
-    return Warehouse(
+  factory Brand.fromJson(Map<String, dynamic> json) {
+    return Brand(
       id: json['id'],
       name: json['name'],
       code: json['code'],
-      mobile: json['mobile'],
-      address: json['address'],
+      description: json['description'],
+      category: json['category'],
+      subcategory: json['subcategory'],
     );
   }
+
+  get brandName => null;
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'code': code,
-      'mobile': mobile,
-      'address': address,
+      'description': description,
+      'category': category,
+      'subcategory': subcategory,
     };
   }
 }
 
 const String baseUrl =
-    'http://localhost:8080/warehouse'; 
+    'http://localhost:8080/brand'; // Update the URL to point to the Brand API
 
 class ApiService {
-  Future<List<Warehouse>> fetchWarehouses() async {
+  Future<List<Brand>> fetchBrands() async {
     final response = await http.get(Uri.parse('$baseUrl/getAll'));
     if (response.statusCode == 200) {
       List<dynamic> body = json.decode(response.body);
-      return body.map((e) => Warehouse.fromJson(e)).toList();
+      return body.map((e) => Brand.fromJson(e)).toList();
     } else {
-      throw Exception('Failed to load warehouses');
+      throw Exception('Failed to load brands');
     }
   }
 
-  Future<void> addWarehouse(Warehouse w) async {
+  Future<void> addBrand(Brand b) async {
     final response = await http.post(
       Uri.parse('$baseUrl/save'),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode(w.toJson()),
+      body: json.encode(b.toJson()),
     );
     if (response.statusCode != 200 && response.statusCode != 201) {
-      throw Exception('Failed to save warehouse');
+      throw Exception('Failed to save brand');
     }
   }
 
-  Future<void> updateWarehouse(Warehouse w) async {
+  Future<void> updateBrand(Brand b) async {
     final response = await http.put(
       Uri.parse('$baseUrl/update'),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode(w.toJson()),
+      body: json.encode(b.toJson()),
     );
     if (response.statusCode != 200) {
-      throw Exception('Failed to update warehouse');
+      throw Exception('Failed to update brand');
     }
   }
 
-  Future<void> deleteWarehouse(int id) async {
+  Future<void> deleteBrand(int id) async {
     final response = await http.delete(Uri.parse('$baseUrl/delete/$id'));
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete warehouse');
+      throw Exception('Failed to delete brand');
     }
   }
 }
 
-class WarehouseScreen extends StatefulWidget {
-  const WarehouseScreen({super.key});
+class BrandScreen extends StatefulWidget {
+  const BrandScreen({super.key});
 
   @override
-  _WarehouseScreenState createState() => _WarehouseScreenState();
+  _BrandScreenState createState() => _BrandScreenState();
 }
 
-class _WarehouseScreenState extends State<WarehouseScreen> {
+class _BrandScreenState extends State<BrandScreen> {
   final _formKey = GlobalKey<FormState>();
   final apiService = ApiService();
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController codeController = TextEditingController();
-  final TextEditingController mobileController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController categoryController = TextEditingController();
+  final TextEditingController subcategoryController = TextEditingController();
 
-  List<Warehouse> warehouses = [];
+  List<Brand> brands = [];
   bool isEditing = false;
   int? editingId;
 
   @override
   void initState() {
     super.initState();
-    loadWarehouses();
+    loadBrands();
   }
 
-  Future<void> loadWarehouses() async {
+  Future<void> loadBrands() async {
     try {
-      final data = await apiService.fetchWarehouses();
+      final data = await apiService.fetchBrands();
       setState(() {
-        warehouses = data;
+        brands = data;
       });
     } catch (e) {
-      print('Error loading warehouses: $e');
+      print('Error loading brands: $e');
     }
   }
 
-  void saveWarehouse() async {
+  void saveBrand() async {
     if (_formKey.currentState!.validate()) {
-      Warehouse w = Warehouse(
+      Brand b = Brand(
         id: isEditing ? editingId : null,
         name: nameController.text,
         code: codeController.text,
-        mobile: mobileController.text,
-        address: addressController.text,
+        description: descriptionController.text,
+        category: categoryController.text,
+        subcategory: subcategoryController.text,
       );
 
       try {
         if (isEditing) {
-          await apiService.updateWarehouse(w);
+          await apiService.updateBrand(b);
         } else {
-          await apiService.addWarehouse(w);
+          await apiService.addBrand(b);
         }
-        await loadWarehouses();
+        await loadBrands();
         clearForm();
       } catch (e) {
         print('Error saving: $e');
@@ -145,21 +153,22 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
     }
   }
 
-  void editWarehouse(Warehouse w) {
+  void editBrand(Brand b) {
     setState(() {
-      nameController.text = w.name;
-      codeController.text = w.code;
-      mobileController.text = w.mobile;
-      addressController.text = w.address;
+      nameController.text = b.name;
+      codeController.text = b.code;
+      descriptionController.text = b.description;
+      categoryController.text = b.category;
+      subcategoryController.text = b.subcategory;
       isEditing = true;
-      editingId = w.id;
+      editingId = b.id;
     });
   }
 
-  void deleteWarehouse(Warehouse w) async {
+  void deleteBrand(Brand b) async {
     try {
-      await apiService.deleteWarehouse(w.id!);
-      await loadWarehouses();
+      await apiService.deleteBrand(b.id!);
+      await loadBrands();
     } catch (e) {
       print('Error deleting: $e');
     }
@@ -168,8 +177,9 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
   void clearForm() {
     nameController.clear();
     codeController.clear();
-    mobileController.clear();
-    addressController.clear();
+    descriptionController.clear();
+    categoryController.clear();
+    subcategoryController.clear();
     isEditing = false;
     editingId = null;
   }
@@ -178,7 +188,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Warehouse Manager'),
+        title: Text('Brand Manager'),
         backgroundColor: Colors.blue.shade600,
       ),
       drawer: Drawer(child: DreawerWidget()),
@@ -195,7 +205,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                   child: Column(
                     children: [
                       Text(
-                        "Add Warehouse",
+                        "Add Brand",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -218,7 +228,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                             child: TextFormField(
                               controller: codeController,
                               decoration: InputDecoration(
-                                labelText: 'Warehouse Code',
+                                labelText: 'Brand Code',
                               ),
                               validator:
                                   (value) =>
@@ -231,21 +241,44 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                         children: [
                           Expanded(
                             child: TextFormField(
-                              controller: mobileController,
-                              decoration: InputDecoration(labelText: 'Phone'),
+                              controller: descriptionController,
+                              decoration: InputDecoration(
+                                labelText: 'Description',
+                              ),
                               validator:
                                   (value) =>
-                                      value!.isEmpty ? 'Enter phone' : null,
+                                      value!.isEmpty
+                                          ? 'Enter description'
+                                          : null,
                             ),
                           ),
                           SizedBox(width: 16),
                           Expanded(
                             child: TextFormField(
-                              controller: addressController,
-                              decoration: InputDecoration(labelText: 'Address'),
+                              controller: categoryController,
+                              decoration: InputDecoration(
+                                labelText: 'Category',
+                              ),
                               validator:
                                   (value) =>
-                                      value!.isEmpty ? 'Enter address' : null,
+                                      value!.isEmpty ? 'Enter category' : null,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: subcategoryController,
+                              decoration: InputDecoration(
+                                labelText: 'Subcategory',
+                              ),
+                              validator:
+                                  (value) =>
+                                      value!.isEmpty
+                                          ? 'Enter subcategory'
+                                          : null,
                             ),
                           ),
                         ],
@@ -257,7 +290,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             ElevatedButton(
-                              onPressed: saveWarehouse,
+                              onPressed: saveBrand,
                               child: Text(isEditing ? 'Update' : 'Save'),
                             ),
                             if (isEditing) SizedBox(width: 8),
@@ -276,7 +309,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
             ),
             SizedBox(height: 24),
             Text(
-              "Warehouse List",
+              "Brand List",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Divider(),
@@ -286,28 +319,30 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                 columns: const [
                   DataColumn(label: Text('Name')),
                   DataColumn(label: Text('Code')),
-                  DataColumn(label: Text('Phone')),
-                  DataColumn(label: Text('Address')),
+                  DataColumn(label: Text('Description')),
+                  DataColumn(label: Text('Category')),
+                  DataColumn(label: Text('Subcategory')),
                   DataColumn(label: Text('Actions')),
                 ],
                 rows:
-                    warehouses.map((w) {
+                    brands.map((b) {
                       return DataRow(
                         cells: [
-                          DataCell(Text(w.name)),
-                          DataCell(Text(w.code)),
-                          DataCell(Text(w.mobile)),
-                          DataCell(Text(w.address)),
+                          DataCell(Text(b.name)),
+                          DataCell(Text(b.code)),
+                          DataCell(Text(b.description)),
+                          DataCell(Text(b.category)),
+                          DataCell(Text(b.subcategory)),
                           DataCell(
                             Row(
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.edit, color: Colors.blue),
-                                  onPressed: () => editWarehouse(w),
+                                  onPressed: () => editBrand(b),
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () => deleteWarehouse(w),
+                                  onPressed: () => deleteBrand(b),
                                 ),
                               ],
                             ),

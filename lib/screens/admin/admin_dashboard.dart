@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:new_flutter_app/screens/crm/distributor.dart';
+
 import 'package:new_flutter_app/screens/crm/staff.dart';
 import 'package:new_flutter_app/screens/crm/supplier.dart';
 import 'package:new_flutter_app/screens/crm/warehouselist.dart';
 import 'package:new_flutter_app/screens/payments/allpayments.dart';
+import 'package:new_flutter_app/screens/stocks/category_sc.dart';
+
 import 'package:new_flutter_app/screens/stocks/drawer.dart';
 import 'package:new_flutter_app/screens/stocks/stock.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../stocks/product_list_screen.dart';
-import '../stocks/category_screen.dart';
+
 import '../sales/order_screen.dart';
 import '../crm/customer_screen.dart';
 import '../reports/report_screen.dart';
 import '../settings/settings_screen.dart';
-
-
 
 class MyProject extends StatelessWidget {
   const MyProject({super.key});
@@ -42,7 +43,7 @@ class MyProject extends StatelessWidget {
         '/reports': (context) => ReportScreen(),
         '/allPayments': (context) => AllPaymentsScreen(),
         '/recentPayments': (context) => RecentPayments(),
-        '/distributorList': (context) => DistributorListPage(),
+        '/distributorList': (context) => DistributorScreen(),
         '/supplierList': (context) => SupplierPage(),
         '/wareHouse': (context) => WarehouseScreen(),
         '/staff': (context) => AddStaffForm(),
