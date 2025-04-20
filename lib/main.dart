@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:new_flutter_app/models/category.dart';
 import 'package:new_flutter_app/screens/crm/distributor.dart';
 import 'package:new_flutter_app/screens/crm/staff.dart';
 import 'package:new_flutter_app/screens/crm/supplier.dart';
@@ -9,7 +10,7 @@ import 'package:new_flutter_app/screens/stocks/brand_screen.dart';
 import 'package:new_flutter_app/screens/stocks/stock.dart';
 import 'package:provider/provider.dart';
 import 'providers/product_provider.dart';
-import 'providers/category_provider.dart';
+
 import 'providers/supplier_provider.dart';
 import 'models/brand.dart';
 import 'screens/auth/login_screen.dart';
@@ -78,7 +79,7 @@ class MyApp extends StatelessWidget {
           '/wareHouse': (context) => WarehouseScreen(),
           '/staff': (context) => AddStaffForm(),
           '/settings': (context) => SettingsScreen(),
-          '/addBrand': (context) => AddBrandForm(),
+          // '/addBrand': (context) => AddBrandForm(),
           '/brands': (context) => BrandScreen(),
         },
       ),

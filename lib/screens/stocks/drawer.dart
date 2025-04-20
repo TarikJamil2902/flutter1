@@ -84,7 +84,7 @@ class DreawerWidget extends StatelessWidget {
             _buildDrawerItem(
               icon: Icons.list,
               title: 'Category list',
-              path: '/wastage',
+              path: '/categories',
             ),
             _buildDrawerItem(
               icon: Icons.list,

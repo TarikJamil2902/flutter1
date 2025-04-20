@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:new_flutter_app/models/category.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../providers/product_provider.dart';
-import '../../providers/category_provider.dart';
 
 class ProductReportsScreen extends StatelessWidget {
   const ProductReportsScreen({super.key});
@@ -26,11 +26,7 @@ class ProductReportsScreen extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: [
-            _OverviewTab(),
-            _CategoriesTab(),
-            _StockTab(),
-          ],
+          children: [_OverviewTab(), _CategoriesTab(), _StockTab()],
         ),
       ),
     );
@@ -49,7 +45,8 @@ class _OverviewTab extends StatelessWidget {
           (sum, product) => sum + product.quantity,
         );
         final lowStockProducts = products.where((p) => p.quantity < 10).length;
-        final outOfStockProducts = products.where((p) => p.quantity <= 0).length;
+        final outOfStockProducts =
+            products.where((p) => p.quantity <= 0).length;
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -58,10 +55,7 @@ class _OverviewTab extends StatelessWidget {
             children: [
               const Text(
                 'Product Overview',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
               Row(
@@ -141,12 +135,7 @@ class _OverviewTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            title,
-            style: TextStyle(
-              color: color.withOpacity(0.8),
-            ),
-          ),
+          Text(title, style: TextStyle(color: color.withOpacity(0.8))),
         ],
       ),
     );
@@ -161,9 +150,7 @@ class _CategoriesTab extends StatelessWidget {
         final categories = categoryProvider.categories;
 
         if (categories.isEmpty) {
-          return const Center(
-            child: Text('No categories available'),
-          );
+          return const Center(child: Text('No categories available'));
         }
 
         return Padding(
@@ -172,34 +159,34 @@ class _CategoriesTab extends StatelessWidget {
             children: [
               const Text(
                 'Products by Category',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
               Expanded(
                 child: PieChart(
                   PieChartData(
-                    sections: categories.map((category) {
-                      final double percentage = category.productCount /
-                          categories.fold(
-                            0,
-                            (sum, cat) => sum + cat.productCount,
+                    sections:
+                        categories.map((category) {
+                          final double percentage =
+                              category.productCount /
+                              categories.fold(
+                                0,
+                                (sum, cat) => sum + cat.productCount as int,
+                              );
+                          return PieChartSectionData(
+                            color:
+                                Colors.primaries[categories.indexOf(category) %
+                                    Colors.primaries.length],
+                            value: percentage * 100,
+                            title:
+                                '${category.name}\n${(percentage * 100).toStringAsFixed(1)}%',
+                            radius: 100,
+                            titleStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
                           );
-                      return PieChartSectionData(
-                        color: Colors.primaries[
-                            categories.indexOf(category) % Colors.primaries.length],
-                        value: percentage * 100,
-                        title:
-                            '${category.name}\n${(percentage * 100).toStringAsFixed(1)}%',
-                        radius: 100,
-                        titleStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                      );
-                    }).toList(),
+                        }).toList(),
                     sectionsSpace: 2,
                     centerSpaceRadius: 0,
                   ),
@@ -221,9 +208,7 @@ class _StockTab extends StatelessWidget {
         final products = productProvider.products;
 
         if (products.isEmpty) {
-          return const Center(
-            child: Text('No products available'),
-          );
+          return const Center(child: Text('No products available'));
         }
 
         final stockLevels = [
@@ -238,10 +223,7 @@ class _StockTab extends StatelessWidget {
             children: [
               const Text(
                 'Stock Levels',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
               Expanded(
@@ -306,9 +288,7 @@ class _StockTab extends StatelessWidget {
           toY: y.toDouble(),
           color: color,
           width: 20,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(4),
-          ),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
         ),
       ],
     );
