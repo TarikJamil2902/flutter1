@@ -11,7 +11,7 @@ import 'package:new_flutter_app/screens/stocks/category_sc.dart';
 import 'package:new_flutter_app/screens/stocks/drawer.dart';
 import 'package:new_flutter_app/screens/stocks/stock.dart';
 import '../dashboard/dashboard_screen.dart';
-import '../stocks/product_list_screen.dart';
+
 
 import '../sales/order_screen.dart';
 import '../crm/customer_screen.dart';
@@ -30,7 +30,7 @@ class MyProject extends StatelessWidget {
         // '/login': (context) => const LoginScreen(),
         '/adminDashboard': (context) => AdminDash2(),
         '/dashboard': (context) => DashboardScreen(),
-        '/products': (context) => ProductListScreen(),
+        
         '/categories': (context) => CategoryScreen(),
         '/orders': (context) => OrderScreen(),
         '/customers': (context) => CustomerScreen(),

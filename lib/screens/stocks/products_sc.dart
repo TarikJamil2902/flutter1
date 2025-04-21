@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:new_flutter_app/screens/stocks/brand_sc.dart';
+import 'package:new_flutter_app/screens/stocks/drawer.dart';
 import 'category_sc.dart';
 
 class Brand {
@@ -219,6 +220,15 @@ class _ProductScreenState extends State<ProductScreen> {
   bool isEditing = false;
   int? editingId;
 
+  // Filter and Search Variables
+  String searchQuery = '';
+  Brand? filterBrand;
+  Category? filterCategory;
+
+  bool filterBy(Product element) {
+    return element.product_name.contains(searchQuery); // or any other condition
+  }
+
   @override
   void initState() {
     super.initState();
@@ -227,9 +237,13 @@ class _ProductScreenState extends State<ProductScreen> {
     loadCategories();
   }
 
+  List<Product> filteredProducts = [];
   void loadProducts() async {
     final list = await service.fetchProducts();
-    setState(() => products = list);
+    setState(() {
+      products = list;
+      filteredProducts = list.where((element) => filterBy(element)).toList();
+    });
   }
 
   void loadBrands() async {
@@ -254,6 +268,97 @@ class _ProductScreenState extends State<ProductScreen> {
         categories = data.map((e) => Category.fromJson(e)).toList();
       });
     }
+  }
+
+  void applySearchFilter() {
+    setState(() {
+      filteredProducts =
+          products.where((product) {
+            final matchesSearch =
+                product.product_name.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                ) ||
+                product.product_code.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                );
+            final matchesBrand =
+                filterBrand == null ||
+                product.product_brand == filterBrand!.name;
+            final matchesCategory =
+                filterCategory == null ||
+                product.product_category == filterCategory!.name;
+            return matchesSearch && matchesBrand && matchesCategory;
+          }).toList();
+    });
+  }
+
+  void showFilterModal() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Filter Products"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButtonFormField<Brand>(
+                value: filterBrand,
+                items:
+                    brands.map((brand) {
+                      return DropdownMenuItem<Brand>(
+                        value: brand,
+                        child: Text(brand.name),
+                      );
+                    }).toList(),
+                hint: Text("Select Brand"),
+                onChanged: (value) {
+                  setState(() {
+                    filterBrand = value;
+                  });
+                },
+              ),
+              SizedBox(height: 10),
+              DropdownButtonFormField<Category>(
+                value: filterCategory,
+                items:
+                    categories.map((category) {
+                      return DropdownMenuItem<Category>(
+                        value: category,
+                        child: Text(category.name),
+                      );
+                    }).toList(),
+                hint: Text("Select Category"),
+                onChanged: (value) {
+                  setState(() {
+                    filterCategory = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                applySearchFilter();
+              },
+              child: Text("Apply"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  filterBrand = null;
+                  filterCategory = null;
+                });
+                Navigator.pop(context);
+                applySearchFilter();
+              },
+              child: Text("Clear Filters"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void clearForm() {
@@ -387,6 +492,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Product Manager")),
+      drawer: Drawer(child: DreawerWidget()),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -463,6 +569,48 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               Divider(),
+              // ---------------- Products Section Starts Here ----------------
+              const SizedBox(height: 32),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.teal,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Products",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.search, color: Colors.white),
+                      onPressed: () {
+                        applySearchFilter();
+                        // Implement your search logic here
+                        print("Search icon tapped");
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.filter_list, color: Colors.white),
+                      onPressed: () {
+                        // Show filter modal or page
+                        print("Filter icon tapped");
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
               SizedBox(
                 height: 400,
                 child: ListView.builder(
@@ -476,6 +624,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: DataTable(
+                            columnSpacing: 12,
                             columns: const [
                               DataColumn(label: Text("Name")),
                               DataColumn(label: Text("Code")),
@@ -529,6 +678,8 @@ class _ProductScreenState extends State<ProductScreen> {
                   },
                 ),
               ),
+
+              // ---------------- Products Section Ends Here ----------------
             ],
           ),
         ),

@@ -6,34 +6,22 @@ import 'package:new_flutter_app/screens/stocks/drawer.dart';
 class Category {
   int? id;
   String name;
-  String code;
-  String description;
+  String? code;
+  String? description;
 
-  Category({
-    this.id,
-    required this.name,
-    required this.code,
-    required this.description,
-  });
+  Category({this.id, required this.name, this.code, this.description});
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
       id: json['id'],
-      name: json['name'],
+      name: json['name'] ?? '',
       code: json['code'],
       description: json['description'],
     );
   }
 
-  get categoryName => null;
-
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'code': code,
-      'description': description,
-    };
+    return {'id': id, 'name': name, 'code': code, 'description': description};
   }
 }
 
@@ -142,8 +130,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void editCategory(Category c) {
     setState(() {
       nameController.text = c.name;
-      codeController.text = c.code;
-      descriptionController.text = c.description;
+      codeController.text = c.code ?? '';
+      descriptionController.text = c.description ?? '';
       isEditing = true;
       editingId = c.id;
     });
@@ -200,8 +188,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             child: TextFormField(
                               controller: nameController,
                               decoration: InputDecoration(labelText: 'Name'),
-                              validator: (value) =>
-                                  value!.isEmpty ? 'Enter name' : null,
+                              validator:
+                                  (value) =>
+                                      value!.isEmpty ? 'Enter name' : null,
                             ),
                           ),
                           SizedBox(width: 16),
@@ -209,8 +198,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             child: TextFormField(
                               controller: codeController,
                               decoration: InputDecoration(labelText: 'Code'),
-                              validator: (value) =>
-                                  value!.isEmpty ? 'Enter code' : null,
                             ),
                           ),
                         ],
@@ -219,8 +206,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       TextFormField(
                         controller: descriptionController,
                         decoration: InputDecoration(labelText: 'Description'),
-                        validator: (value) =>
-                            value!.isEmpty ? 'Enter description' : null,
+                        maxLines: 2,
                       ),
                       SizedBox(height: 16),
                       Align(
@@ -261,29 +247,30 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   DataColumn(label: Text('Description')),
                   DataColumn(label: Text('Actions')),
                 ],
-                rows: categories.map((c) {
-                  return DataRow(
-                    cells: [
-                      DataCell(Text(c.name)),
-                      DataCell(Text(c.code)),
-                      DataCell(Text(c.description)),
-                      DataCell(
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () => editCategory(c),
+                rows:
+                    categories.map((c) {
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(c.name)),
+                          DataCell(Text(c.code ?? '')),
+                          DataCell(Text(c.description ?? '')),
+                          DataCell(
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: Colors.blue),
+                                  onPressed: () => editCategory(c),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () => deleteCategory(c),
+                                ),
+                              ],
                             ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => deleteCategory(c),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }).toList(),
+                          ),
+                        ],
+                      );
+                    }).toList(),
               ),
             ),
           ],

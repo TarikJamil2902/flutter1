@@ -102,11 +102,11 @@ class DreawerWidget extends StatelessWidget {
           title: Text('Sales', style: GoogleFonts.poppins()),
           leading: Icon(Icons.shopping_cart),
           children: [
-            buildDrawerItem(icon: Icons.add, title: 'Sales', path: '/reports'),
+            buildDrawerItem(icon: Icons.add, title: 'Sales', path: '/sales'),
             buildDrawerItem(
               icon: Icons.bar_chart,
               title: 'Sales List',
-              path: '/reports',
+              path: '/sales',
             ),
             buildDrawerItem(
               icon: Icons.bar_chart,
