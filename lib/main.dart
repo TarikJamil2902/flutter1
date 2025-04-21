@@ -10,7 +10,7 @@ import 'package:new_flutter_app/screens/stocks/brand_sc.dart';
 
 import 'package:new_flutter_app/screens/stocks/category_sc.dart';
 import 'package:new_flutter_app/screens/stocks/products_sc.dart';
-import 'package:new_flutter_app/screens/stocks/sales_sc.dart';
+import 'package:new_flutter_app/screens/sales/sales_sc.dart';
 import 'package:new_flutter_app/screens/stocks/stock.dart';
 import 'package:provider/provider.dart';
 import 'providers/product_provider.dart';
@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
           '/settings': (context) => SettingsScreen(),
           // '/addBrand': (context) => AddBrandForm(),
           '/brands': (context) => BrandScreen(),
-          // '/sales': (context) => SaleScreen(),
+          '/sales': (context) => SaleScreen(),
         },
       ),
     );
