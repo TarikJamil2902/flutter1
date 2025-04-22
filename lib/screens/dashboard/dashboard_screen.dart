@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:new_flutter_app/screens/stocks/category_sc.dart';
+import 'package:new_flutter_app/screens/stocks/drawer.dart';
+import 'package:new_flutter_app/screens/stocks/products_sc.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -8,20 +11,6 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Dashboard',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // TODO: Implement notifications
-            },
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -46,29 +35,42 @@ class DashboardScreen extends StatelessWidget {
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
       children: [
-        _buildSummaryCard(
-          'Total Products',
-          '256',
-          Icons.inventory,
-          Colors.blue,
+        FutureBuilder(
+          future: ProductService().fetchProducts(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return _buildSummaryCard(
+                'Total Products',
+                snapshot.data!.length.toString(),
+                Icons.inventory,
+                Colors.blue,
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
         ),
-        _buildSummaryCard(
-          'Low Stock',
-          '12',
-          Icons.warning,
-          Colors.orange,
-        ),
+        _buildSummaryCard('Low Stock', '12', Icons.warning, Colors.orange),
         _buildSummaryCard(
           'Total Value',
-          '\$45,250',
+          '45,250',
           Icons.attach_money,
           Colors.green,
         ),
-        _buildSummaryCard(
-          'Categories',
-          '8',
-          Icons.category,
-          Colors.purple,
+        FutureBuilder(
+          future: CategoryService().fetchCategories(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return _buildSummaryCard(
+                'Categories',
+                snapshot.data!.length.toString(),
+                Icons.category,
+                Colors.purple,
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
         ),
       ],
     );
@@ -82,11 +84,15 @@ class DashboardScreen extends StatelessWidget {
   ) {
     return Container(
       padding: const EdgeInsets.all(16),
+
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(
+          1000,
+        ), // বড় করে দিলে full oval/pill হয়
         border: Border.all(color: color.withOpacity(0.5)),
       ),
+
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -102,10 +108,7 @@ class DashboardScreen extends StatelessWidget {
           ),
           Text(
             title,
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -189,7 +192,7 @@ class DashboardScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ), 
+          ),
         ],
       ),
     );
@@ -287,9 +290,7 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
                 ),
                 Text(
                   subtitle,
@@ -303,10 +304,7 @@ class DashboardScreen extends StatelessWidget {
           ),
           Text(
             time,
-            style: GoogleFonts.poppins(
-              color: Colors.grey[500],
-              fontSize: 12,
-            ),
+            style: GoogleFonts.poppins(color: Colors.grey[500], fontSize: 12),
           ),
         ],
       ),

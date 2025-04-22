@@ -9,11 +9,8 @@ import 'package:new_flutter_app/screens/payments/allpayments.dart';
 import 'package:new_flutter_app/screens/stocks/category_sc.dart';
 
 import 'package:new_flutter_app/screens/stocks/drawer.dart';
-import 'package:new_flutter_app/screens/stocks/stock.dart';
 import '../dashboard/dashboard_screen.dart';
 
-
-import '../sales/order_screen.dart';
 import '../crm/customer_screen.dart';
 import '../reports/report_screen.dart';
 import '../settings/settings_screen.dart';
@@ -30,23 +27,18 @@ class MyProject extends StatelessWidget {
         // '/login': (context) => const LoginScreen(),
         '/adminDashboard': (context) => AdminDash2(),
         '/dashboard': (context) => DashboardScreen(),
-        
+
         '/categories': (context) => CategoryScreen(),
-        '/orders': (context) => OrderScreen(),
+
         '/customers': (context) => CustomerScreen(),
-        '/stocks': (context) => MainStockScreen(),
-        '/pendingStock': (context) => StockInPendingScreen(),
-        '/stockInvoice': (context) => InvoiceListScreen(),
-        '/wastage': (context) => WastageListScreen(),
-        '/recieved': (context) => RecievedListScreen(),
-        '/addProduct': (context) => StockInScreen(),
+
         '/reports': (context) => ReportScreen(),
         '/allPayments': (context) => AllPaymentsScreen(),
         '/recentPayments': (context) => RecentPayments(),
         '/distributorList': (context) => DistributorScreen(),
-        '/supplierList': (context) => SupplierPage(),
+        '/supplierList': (context) => SupplierScreen(),
         '/wareHouse': (context) => WarehouseScreen(),
-        '/staff': (context) => AddStaffForm(),
+        '/staff': (context) => StaffScreen(),
         '/settings': (context) => SettingsScreen(),
       },
     );

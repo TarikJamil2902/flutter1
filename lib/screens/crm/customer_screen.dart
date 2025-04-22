@@ -1,197 +1,215 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:new_flutter_app/screens/stocks/drawer.dart';
 
-class CustomerScreen extends StatelessWidget {
+class Customer {
+  int id;
+  String name;
+  String phone;
+  String address;
+  String email;
+
+  Customer({
+    required this.id,
+    required this.name,
+    required this.phone,
+    required this.address,
+    required this.email,
+  });
+}
+
+class CustomerScreen extends StatefulWidget {
   const CustomerScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> customers = [
-      {
-        'name': 'John Doe',
-        'email': 'john.doe@email.com',
-        'phone': '+880 1712345678',
-        'orders': 5,
-        'totalSpent': 1299.99,
-      },
-      {
-        'name': 'Jane Smith',
-        'email': 'jane.smith@email.com',
-        'phone': '+880 1812345678',
-        'orders': 3,
-        'totalSpent': 799.50,
-      },
-      {
-        'name': 'Robert Johnson',
-        'email': 'robert.j@email.com',
-        'phone': '+880 1912345678',
-        'orders': 8,
-        'totalSpent': 2499.99,
-      },
-    ];
+  State<CustomerScreen> createState() => _CustomerScreenState();
+}
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Customers',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // TODO: Implement customer search
-            },
+class _CustomerScreenState extends State<CustomerScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+  final addressController = TextEditingController();
+  final emailController = TextEditingController();
+
+  List<Customer> customers = [];
+  bool isEditing = false;
+  int? editingId;
+  int nextId = 1;
+
+  void saveCustomer() {
+    if (_formKey.currentState!.validate()) {
+      if (isEditing) {
+        int index = customers.indexWhere((c) => c.id == editingId);
+        customers[index] = Customer(
+          id: editingId!,
+          name: nameController.text,
+          phone: phoneController.text,
+          address: addressController.text,
+          email: emailController.text,
+        );
+      } else {
+        customers.add(
+          Customer(
+            id: nextId++,
+            name: nameController.text,
+            phone: phoneController.text,
+            address: addressController.text,
+            email: emailController.text,
           ),
-          IconButton(
-            icon: const Icon(Icons.person_add),
-            onPressed: () {
-              // TODO: Add new customer
-            },
-          ),
-        ],
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: customers.length,
-        itemBuilder: (context, index) {
-          final customer = customers[index];
-          return _buildCustomerCard(customer);
-        },
-      ),
-    );
+        );
+      }
+
+      setState(() {});
+      clearForm();
+    }
   }
 
-  Widget _buildCustomerCard(Map<String, dynamic> customer) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+  void editCustomer(Customer c) {
+    nameController.text = c.name;
+    phoneController.text = c.phone;
+    addressController.text = c.address;
+    emailController.text = c.email;
+    setState(() {
+      isEditing = true;
+      editingId = c.id;
+    });
+  }
+
+  void deleteCustomer(Customer c) {
+    setState(() {
+      customers.removeWhere((e) => e.id == c.id);
+    });
+  }
+
+  void clearForm() {
+    nameController.clear();
+    phoneController.clear();
+    addressController.clear();
+    emailController.clear();
+    isEditing = false;
+    editingId = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Customer Manager"),
+        backgroundColor: Colors.teal,
       ),
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+      drawer: Drawer(child: DreawerWidget()),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundColor: Colors.blue.withOpacity(0.1),
-                  child: Text(
-                    customer['name'].substring(0, 1).toUpperCase(),
-                    style: GoogleFonts.poppins(
-                      color: Colors.blue,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
+            Card(
+              elevation: 4,
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Form(
+                  key: _formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        customer['name'],
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                        isEditing ? "Edit Customer" : "Add Customer",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        customer['email'],
-                        style: GoogleFonts.poppins(
-                          color: Colors.grey[600],
-                          fontSize: 14,
-                        ),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: nameController,
+                        decoration: InputDecoration(labelText: "Name"),
+                        validator:
+                            (value) => value!.isEmpty ? "Enter name" : null,
+                      ),
+                      TextFormField(
+                        controller: phoneController,
+                        decoration: InputDecoration(labelText: "Phone"),
+                        validator:
+                            (value) => value!.isEmpty ? "Enter phone" : null,
+                      ),
+                      TextFormField(
+                        controller: addressController,
+                        decoration: InputDecoration(labelText: "Address"),
+                        validator:
+                            (value) => value!.isEmpty ? "Enter address" : null,
+                      ),
+                      TextFormField(
+                        controller: emailController,
+                        decoration: InputDecoration(labelText: "Email"),
+                        validator:
+                            (value) => value!.isEmpty ? "Enter email" : null,
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: saveCustomer,
+                            child: Text(isEditing ? "Update" : "Save"),
+                          ),
+                          if (isEditing) SizedBox(width: 8),
+                          if (isEditing)
+                            OutlinedButton(
+                              onPressed: clearForm,
+                              child: Text("Cancel"),
+                            ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                PopupMenuButton<String>(
-                  onSelected: (value) {
-                    // TODO: Handle menu item selection
-                  },
-                  itemBuilder: (BuildContext context) => [
-                    const PopupMenuItem(
-                      value: 'edit',
-                      child: Row(
-                        children: [
-                          Icon(Icons.edit, size: 20),
-                          SizedBox(width: 8),
-                          Text('Edit'),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete, size: 20),
-                          SizedBox(width: 8),
-                          Text('Delete'),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
-            const Divider(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildInfoColumn(
-                  icon: Icons.phone,
-                  label: 'Phone',
-                  value: customer['phone'],
-                ),
-                _buildInfoColumn(
-                  icon: Icons.shopping_bag,
-                  label: 'Orders',
-                  value: '${customer['orders']}',
-                ),
-                _buildInfoColumn(
-                  icon: Icons.attach_money,
-                  label: 'Total Spent',
-                  value: '\$${customer['totalSpent'].toStringAsFixed(2)}',
-                ),
-              ],
+            SizedBox(height: 24),
+            Text(
+              "Customer List",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Divider(),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                columns: const [
+                  DataColumn(label: Text("Name")),
+                  DataColumn(label: Text("Phone")),
+                  DataColumn(label: Text("Address")),
+                  DataColumn(label: Text("Email")),
+                  DataColumn(label: Text("Actions")),
+                ],
+                rows:
+                    customers.map((c) {
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(c.name)),
+                          DataCell(Text(c.phone)),
+                          DataCell(Text(c.address)),
+                          DataCell(Text(c.email)),
+                          DataCell(
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: Colors.blue),
+                                  onPressed: () => editCustomer(c),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () => deleteCustomer(c),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+              ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildInfoColumn({
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
-    return Column(
-      children: [
-        Icon(icon, size: 20, color: Colors.grey[600]),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            color: Colors.grey[600],
-            fontSize: 12,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          value,
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-          ),
-        ),
-      ],
     );
   }
 }

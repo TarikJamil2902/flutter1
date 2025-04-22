@@ -40,8 +40,7 @@ class Warehouse {
   }
 }
 
-const String baseUrl =
-    'http://localhost:8080/warehouse'; 
+const String baseUrl = 'http://localhost:8080/warehouse';
 
 class ApiService {
   Future<List<Warehouse>> fetchWarehouses() async {

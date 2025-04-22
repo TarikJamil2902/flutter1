@@ -121,7 +121,7 @@ class DreawerWidget extends StatelessWidget {
             buildDrawerItem(
               icon: Icons.receipt,
               title: 'Sales Invoice',
-              path: '/invoice',
+              path: '/saleInvoice',
             ),
           ],
         ),

@@ -1,431 +1,498 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:new_flutter_app/screens/crm/distributor.dart';
-import 'package:new_flutter_app/screens/crm/warehouselist.dart';
-import 'package:new_flutter_app/screens/stocks/products_sc.dart';
+import 'package:new_flutter_app/screens/stocks/drawer.dart';
 
-class Sale {
-  final int? sale_id;
-  final String date;
-  final String status;
-
-  final int distributor_id;
-  final int warehouse_id;
-  final String customer_name;
-
-  final int grand_total;
-
-  Sale({
-    this.sale_id,
-    required this.date,
-    required this.status,
-
-    required this.distributor_id,
-    required this.warehouse_id,
-    required this.customer_name,
-
-    required this.grand_total,
-  });
-
-  factory Sale.fromJson(Map<String, dynamic> json) {
-    return Sale(
-      sale_id: json['sale_id'],
-      date: json['date'],
-      status: json['status'],
-
-      distributor_id: json['distributor_id'],
-      warehouse_id: json['warehouse_id'],
-      customer_name: json['customer_name'],
-
-      grand_total: json['grand_total'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'sale_id': sale_id,
-      'date': date,
-      'status': status,
-
-      'distributor_id': distributor_id,
-      'warehouse_id': warehouse_id,
-      'customer_name': customer_name,
-
-      'grand_total': grand_total,
-    };
-  }
-}
-
-class ProductService {
-  static const String baseUrl = 'http://localhost:8080/product';
-
-  Future<List<Product>> getAllProducts() async {
-    final response = await http.get(Uri.parse('$baseUrl/getAll'));
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => Product.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load products');
-    }
-  }
-
-  Future<Product> getProductById(int id) async {
-    final response = await http.get(Uri.parse('$baseUrl/get/$id'));
-    if (response.statusCode == 200) {
-      return Product.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load product');
-    }
-  }
-
-  Future<List<Product>> getProductsByBrand(String brandName) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/getproduct/$brandName'),
-    );
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => Product.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load products by brand');
-    }
-  }
-
-  Future<int> getNextProductId() async {
-    final response = await http.get(Uri.parse('$baseUrl/getNextValue'));
-    if (response.statusCode == 200) {
-      return int.parse(response.body);
-    } else {
-      throw Exception('Failed to fetch next product ID');
-    }
-  }
-
-  Future<void> saveProduct(Product product) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/save'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(product.toJson()),
-    );
-    if (response.statusCode != 200) {
-      throw Exception('Failed to save product');
-    }
-  }
-
-  Future<void> updateProduct(Product product) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/update'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(product.toJson()),
-    );
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update product');
-    }
-  }
-
-  Future<void> updateProductStock(
-    int productId,
-    int quantity,
-    int newTotal,
-  ) async {
-    final uri = Uri.parse('$baseUrl/updateStock/$productId').replace(
-      queryParameters: {
-        'quantity': quantity.toString(),
-        'newtotal': newTotal.toString(),
-      },
-    );
-    final response = await http.put(uri);
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update product stock');
-    }
-  }
-
-  Future<void> deleteProduct(int id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/delete/$id'));
-    if (response.statusCode != 200) {
-      throw Exception('Failed to delete product');
-    }
-  }
-}
-
-class SaleService {
-  final String baseUrl = 'http://localhost:8080/sale';
-
-  Future<List<Sale>> fetchSales() async {
-    final response = await http.get(Uri.parse('$baseUrl/getAll'));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      return data.map((e) => Sale.fromJson(e)).toList();
-    } else {
-      throw Exception('Failed to load sales');
-    }
-  }
-
-  Future<void> addSale(Sale sale) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/save'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(sale.toJson()),
-    );
-    if (response.statusCode != 200) {
-      throw Exception('Failed to save sale');
-    }
-  }
-
-  Future<void> updateSale(Sale sale) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/update'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(sale.toJson()),
-    );
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update sale');
-    }
-  }
-
-  Future<void> deleteSale(int id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/delete/$id'));
-    if (response.statusCode != 200) {
-      throw Exception('Failed to delete sale');
-    }
-  }
-
-  Future<Sale> getSaleById(int id) async {
-    final response = await http.get(Uri.parse('$baseUrl/get/$id'));
-    if (response.statusCode == 200) {
-      return Sale.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to fetch sale');
-    }
-  }
-}
-
-class SaleScreen extends StatefulWidget {
+class SellInvoiceScreen extends StatefulWidget {
   @override
-  _SaleScreenState createState() => _SaleScreenState();
+  _SellInvoiceScreenState createState() => _SellInvoiceScreenState();
 }
 
-class _SaleScreenState extends State<SaleScreen> {
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController quantityController = TextEditingController();
-  final TextEditingController totalController = TextEditingController(
-    text: '0',
-  );
-
-  List<Brand> brands = [];
-  Brand? selectedBrand;
-
-  List<Category> categories = [];
-  Category? selectedCategory;
-
-  List<Product> products = [];
-  Product? selectedProduct;
-
-  String? selectedDistributor;
-  String? selectedWarehouse;
-  String? selectedPaymentMethod;
-  DateTime? selectedDate;
-
-  List<Map<String, dynamic>> addedProducts = [];
+class _SellInvoiceScreenState extends State<SellInvoiceScreen> {
+  final List<Map<String, dynamic>> _products = [];
   double grandTotal = 0;
 
+  int invoiceId = 1; // Simulate auto-increment
+  String? selectedCategory;
+  String? selectedBrand;
+  String? selectedProduct;
+  String? selectedDistributor;
+  String? paymentMethod;
+  DateTime? selectedDate;
+
+  final TextEditingController quantityController = TextEditingController();
+  final TextEditingController customerController = TextEditingController();
+  final TextEditingController customerAddressController =
+      TextEditingController();
+  final TextEditingController customerMobileController =
+      TextEditingController();
+
+  double selectedPrice = 0;
+  int selectedQuantity = 0;
+  double selectedTotal = 0;
+
+  final Map<String, double> productPriceMap = {
+    'Classic Blue Denim Pants': 1200,
+    'Cotton Round Neck T-Shirt': 800,
+    'Formal White Office Shirt': 1800,
+    'Winter Knit Sweater': 2500,
+    'Floral Print Long Kurti': 1500,
+    'Casual Black Hoodie': 1000,
+    'Summer Chiffon Saree': 3000,
+    'Stylish Ladies Skirt': 2000,
+    'Kids Denim Shorts': 500,
+    'Elegant Evening Dress': 5000,
+  };
+
   void calculateTotal() {
-    final price = double.tryParse(priceController.text) ?? 0;
-    final quantity = double.tryParse(quantityController.text) ?? 0;
-    final total = price * quantity;
-    totalController.text = total.toStringAsFixed(2);
+    selectedQuantity = int.tryParse(quantityController.text) ?? 0;
+    selectedTotal = selectedPrice * selectedQuantity;
+    setState(() {});
   }
 
   void addProduct() {
-    final product = {
-      'id': addedProducts.length + 1,
-      'productId': 'P${addedProducts.length + 1}',
-      'name': selectedProduct ?? 'Product',
-      'brand': selectedBrand ?? 'Brand',
-      'price': double.tryParse(priceController.text) ?? 0,
-      'quantity': double.tryParse(quantityController.text) ?? 0,
-      'total': double.tryParse(totalController.text) ?? 0,
-    };
+    if (selectedProduct != null && selectedQuantity > 0) {
+      _products.add({
+        'product': selectedProduct,
+        'price': selectedPrice,
+        'quantity': selectedQuantity,
+        'total': selectedTotal,
+      });
+      grandTotal += selectedTotal;
+      quantityController.clear();
+      selectedProduct = null;
+      selectedPrice = 0;
+      selectedQuantity = 0;
+      selectedTotal = 0;
+      setState(() {});
+    }
+  }
+
+  void saveInvoice() {
+    double subtotal = _products.fold(0.0, (sum, item) => sum + item['total']);
+    double tax = subtotal * 0.05;
+    double total = subtotal + tax;
+
+    showDialog(
+      context: context,
+      builder:
+          (_) => AlertDialog(
+            title: const Text('Sales Invoice'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left Side: Text Info
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "T J Company Ltd.",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              "1234 Arambag,\nDhaka, 1000\nMobile: 0123456789",
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Right Side: Logo
+                      SizedBox(
+                        width: 100,
+                        child: Image.asset('assets/images/logo.jpeg'),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 10),
+                  Text(
+                    "Bill To",
+                    style: TextStyle(
+                      color: Colors.purple,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(customerController.text),
+                  Text(customerAddressController.text),
+                  Text(customerMobileController.text),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Invoice #: ${invoiceId.toString().padLeft(7, '0')}",
+                        style: TextStyle(color: Colors.purple),
+                      ),
+                      Text(
+                        "Date: ${DateTime.now().toLocal().toString().split(' ')[0]}",
+                        style: TextStyle(color: Colors.purple),
+                      ),
+                    ],
+                  ),
+                  Divider(),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          "QTY",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          "Description",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Unit Price",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Amount",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  ..._products.map(
+                    (prod) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(
+                        children: [
+                          Expanded(flex: 1, child: Text('${prod['quantity']}')),
+                          Expanded(flex: 3, child: Text('${prod['product']}')),
+                          Expanded(
+                            flex: 2,
+                            child: Text('${prod['price'].toStringAsFixed(2)}'),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text('${prod['total'].toStringAsFixed(2)}'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text("Subtotal: ${subtotal.toStringAsFixed(2)}"),
+                          Text("Sales Tax (5%): ${tax.toStringAsFixed(2)}"),
+                          Text(
+                            "Total (BDT): ${total.toStringAsFixed(2)}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purple,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "Terms and Conditions",
+                    style: TextStyle(
+                      color: Colors.purple,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text("Payment is due in 14 days."),
+                  Text("Please make checks payable to: T J Company Ltd."),
+                ],
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Print'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          ),
+    );
 
     setState(() {
-      addedProducts.add(product);
-      grandTotal += product['total'] as double;
-
-      priceController.clear();
-      quantityController.clear();
-      totalController.text = '0';
+      invoiceId++; // Simulate auto-increment
     });
-  }
-
-  void pickDate() async {
-    DateTime? date = await showDatePicker(
-      context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (date != null) setState(() => selectedDate = date);
-  }
-
-  Widget buildDropdown(
-    String label,
-    String? value,
-    Function(String?) onChanged,
-  ) {
-    return SizedBox(
-      width: 150,
-      child: DropdownButtonFormField<String>(
-        value: value,
-        hint: Text(label),
-        items:
-            ['One', 'Two', 'Three'].map((item) {
-              return DropdownMenuItem(value: item, child: Text(item));
-            }).toList(),
-        onChanged: onChanged,
-        decoration: InputDecoration(labelText: label),
-      ),
-    );
-  }
-
-  Widget buildTextInput(
-    String label,
-    TextEditingController controller, {
-    bool isNumber = false,
-  }) {
-    return SizedBox(
-      width: 150,
-      child: TextField(
-        controller: controller,
-        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-        decoration: InputDecoration(labelText: label),
-        onChanged: (_) => calculateTotal(),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue.shade50,
-      appBar: AppBar(title: Text('Stock Out'), backgroundColor: Colors.blue),
+      appBar: AppBar(
+        title: Text('Stock Out', textAlign: TextAlign.center),
+        backgroundColor: Colors.purple,
+      ),
+      drawer: Drawer(child: DreawerWidget()),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                buildDropdown(
-                  'Brand',
-                  selectedBrand as String?,
-                  (val) => setState(() => selectedBrand = val as Brand?),
-                ),
-                buildDropdown(
-                  'Product',
-                  selectedProduct as String?,
-                  (val) => setState(() => selectedProduct = val as Product?),
-                ),
-                buildDropdown(
-                  'Distributor',
-                  selectedDistributor,
-                  (val) => setState(() => selectedDistributor = val),
-                ),
-                buildDropdown(
-                  'Warehouse',
-                  selectedWarehouse,
-                  (val) => setState(() => selectedWarehouse = val),
-                ),
-                ElevatedButton(
-                  onPressed: pickDate,
-                  child: Text(
-                    selectedDate == null
-                        ? 'Pick Date'
-                        : selectedDate.toString().split(' ')[0],
-                  ),
-                ),
-                buildDropdown(
-                  'Payment Method',
-                  selectedPaymentMethod,
-                  (val) => setState(() => selectedPaymentMethod = val),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Divider(),
-            Text(
-              'Add Product:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                buildTextInput('Product Name', TextEditingController()),
-                buildTextInput('Brand', TextEditingController()),
-                buildTextInput('Available Stock', TextEditingController()),
-                buildTextInput('Unit', TextEditingController()),
-                buildTextInput('Price', priceController, isNumber: true),
-                buildTextInput('Quantity', quantityController, isNumber: true),
-                buildTextInput('Total', totalController, isNumber: true),
-                ElevatedButton(onPressed: addProduct, child: Text('Add')),
-              ],
-            ),
-            SizedBox(height: 20),
-            DataTable(
-              columns: const [
-                DataColumn(label: Text('Serial')),
-                DataColumn(label: Text('Product Id')),
-                DataColumn(label: Text('Name')),
-                DataColumn(label: Text('Brand')),
-                DataColumn(label: Text('Price')),
-                DataColumn(label: Text('Quantity')),
-                DataColumn(label: Text('Total')),
-              ],
-              rows:
-                  addedProducts.map((product) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text('${product['id']}')),
-                        DataCell(Text(product['productId'])),
-                        DataCell(Text(product['name'])),
-                        DataCell(Text(product['brand'])),
-                        DataCell(Text(product['price'].toString())),
-                        DataCell(Text(product['quantity'].toString())),
-                        DataCell(Text(product['total'].toString())),
-                      ],
-                    );
-                  }).toList(),
-            ),
-            SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text('Total: ', style: TextStyle(fontSize: 16)),
-                SizedBox(width: 10),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  color: Colors.white,
-                  child: Text(
-                    grandTotal.toStringAsFixed(2),
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                Expanded(
+                  child: TextFormField(
+                    initialValue: invoiceId.toString().padLeft(7, '0'),
+                    readOnly: true,
+                    decoration: InputDecoration(labelText: 'Invoice ID'),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    controller: customerController,
+                    decoration: InputDecoration(labelText: 'Customer Name'),
                   ),
                 ),
               ],
             ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: customerAddressController,
+                    decoration: InputDecoration(labelText: 'Customer Address'),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    controller: customerMobileController,
+                    decoration: InputDecoration(labelText: 'Customer Mobile'),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: selectedCategory,
+                    decoration: InputDecoration(labelText: 'Category'),
+                    items:
+                        [
+                              'T-Shirts',
+                              'Shirts',
+                              'Pants',
+                              'Jeans',
+                              'Kurtis',
+                              'Sarees',
+                              'Jackets',
+                              'Sweaters',
+                              'Hoodies',
+                              'Dresses',
+                              'Skirts',
+                              'Shorts',
+                            ]
+                            .map(
+                              (b) => DropdownMenuItem(value: b, child: Text(b)),
+                            )
+                            .toList(),
+                    onChanged:
+                        (value) => setState(() => selectedCategory = value),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: selectedBrand,
+                    decoration: InputDecoration(labelText: 'Brand'),
+                    items:
+                        [
+                              'BEXIMCO',
+                              'Yellow',
+                              'Aarong',
+                              'Ecstasy',
+                              'Sailor',
+                              'Le Reve',
+                              'Cats Eye',
+                              'Texmart',
+                              'Dorjibari',
+                              'Aadi',
+                              'Artisti',
+                              'Richman',
+                            ]
+                            .map(
+                              (b) => DropdownMenuItem(value: b, child: Text(b)),
+                            )
+                            .toList(),
+                    onChanged: (value) => setState(() => selectedBrand = value),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: selectedProduct,
+                    decoration: InputDecoration(labelText: 'Product'),
+                    items:
+                        productPriceMap.keys
+                            .map(
+                              (p) => DropdownMenuItem(value: p, child: Text(p)),
+                            )
+                            .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedProduct = value;
+                        selectedPrice = productPriceMap[value!]!;
+                        calculateTotal();
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: selectedDistributor,
+                    decoration: InputDecoration(labelText: 'Distributor'),
+                    items:
+                        ['Rakib ', 'Nazmul', 'Shakib']
+                            .map(
+                              (d) => DropdownMenuItem(value: d, child: Text(d)),
+                            )
+                            .toList(),
+                    onChanged:
+                        (value) => setState(() => selectedDistributor = value),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextFormField(
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      labelText: 'Select Date',
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
+                    controller: TextEditingController(
+                      text:
+                          selectedDate != null
+                              ? selectedDate!.toString().split(' ')[0]
+                              : '',
+                    ),
+                    onTap: () async {
+                      final date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (date != null) {
+                        setState(() => selectedDate = date);
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+            DropdownButtonFormField<String>(
+              value: paymentMethod,
+              decoration: InputDecoration(labelText: 'Payment Method'),
+              items:
+                  ['Cash', 'Card', 'Online']
+                      .map((m) => DropdownMenuItem(value: m, child: Text(m)))
+                      .toList(),
+              onChanged: (value) => setState(() => paymentMethod = value),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(labelText: 'Price'),
+                    readOnly: true,
+                    controller: TextEditingController(
+                      text: selectedPrice.toString(),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: quantityController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(labelText: 'Quantity'),
+                    onChanged: (_) => calculateTotal(),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(labelText: 'Total'),
+                    readOnly: true,
+                    controller: TextEditingController(
+                      text: selectedTotal.toString(),
+                    ),
+                  ),
+                ),
+                IconButton(onPressed: addProduct, icon: Icon(Icons.add)),
+              ],
+            ),
+            Divider(),
+            ..._products.asMap().entries.map((entry) {
+              int index = entry.key;
+              var product = entry.value;
+              return ListTile(
+                leading: Text((index + 1).toString()),
+                title: Text(product['product']),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Category: ${product['category']}'),
+                    Text('Quantity: ${product['quantity']}'),
+                    Text('Unit: ${product['unit']}'),
+                    Text('Price: ${product['price']}'),
+                  ],
+                ),
+                trailing: Text('Total: ${product['total']}'),
+              );
+            }).toList(),
+            Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Grand Total:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${grandTotal.toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
             SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Save logic
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                child: Text('Save'),
+            ElevatedButton(
+              onPressed: saveInvoice,
+              child: Text('Save'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               ),
             ),
-            SizedBox(height: 20),
-            Text("Sale List", style: TextStyle(fontSize: 16)),
           ],
         ),
       ),

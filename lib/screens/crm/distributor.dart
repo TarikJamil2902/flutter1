@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_flutter_app/screens/stocks/drawer.dart';
 
 class Distributor {
   int? id;
@@ -63,7 +64,6 @@ class Distributor {
   }
 }
 
-
 class DistributorService {
   final String baseUrl = 'http://localhost:8080/distributor';
 
@@ -106,8 +106,6 @@ class DistributorService {
     }
   }
 }
-
-
 
 class DistributorScreen extends StatefulWidget {
   const DistributorScreen({super.key});
@@ -211,7 +209,10 @@ class _DistributorScreenState extends State<DistributorScreen> {
         padding: const EdgeInsets.all(4.0),
         child: TextFormField(
           controller: controller,
-          decoration: InputDecoration(labelText: label, border: OutlineInputBorder()),
+          decoration: InputDecoration(
+            labelText: label,
+            border: OutlineInputBorder(),
+          ),
           validator: (value) => value!.isEmpty ? 'Required' : null,
         ),
       ),
@@ -222,6 +223,8 @@ class _DistributorScreenState extends State<DistributorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Distributor Manager')),
+      drawer: Drawer(child: DreawerWidget()),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -231,21 +234,27 @@ class _DistributorScreenState extends State<DistributorScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    Row(children: [
-                      buildTextField('Name', nameController),
-                      buildTextField('Code', codeController),
-                      buildTextField('Mobile', mobileController),
-                    ]),
-                    Row(children: [
-                      buildTextField('Address', addressController),
-                      buildTextField('Zone', zoneController),
-                      buildTextField('Password', passwordController),
-                    ]),
-                    Row(children: [
-                      buildTextField('Email', emailController),
-                      buildTextField('Username', usernameController),
-                      buildTextField('Usertype', usertypeController),
-                    ]),
+                    Row(
+                      children: [
+                        buildTextField('Name', nameController),
+                        buildTextField('Code', codeController),
+                        buildTextField('Mobile', mobileController),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        buildTextField('Address', addressController),
+                        buildTextField('Zone', zoneController),
+                        buildTextField('Password', passwordController),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        buildTextField('Email', emailController),
+                        buildTextField('Username', usernameController),
+                        buildTextField('Usertype', usertypeController),
+                      ],
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -277,28 +286,39 @@ class _DistributorScreenState extends State<DistributorScreen> {
                     DataColumn(label: Text('Zone')),
                     DataColumn(label: Text('Actions')),
                   ],
-                  rows: distributors.map((d) {
-                    return DataRow(cells: [
-                      DataCell(Text(d.name)),
-                      DataCell(Text(d.code)),
-                      DataCell(Text(d.mobile)),
-                      DataCell(Text(d.zone)),
-                      DataCell(Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () => editDistributor(d),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => deleteDistributor(d.id!),
-                          ),
-                        ],
-                      )),
-                    ]);
-                  }).toList(),
+                  rows:
+                      distributors.map((d) {
+                        return DataRow(
+                          cells: [
+                            DataCell(Text(d.name)),
+                            DataCell(Text(d.code)),
+                            DataCell(Text(d.mobile)),
+                            DataCell(Text(d.zone)),
+                            DataCell(
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.blue,
+                                    ),
+                                    onPressed: () => editDistributor(d),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () => deleteDistributor(d.id!),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
                 ),
-              )
+              ),
             ],
           ),
         ),

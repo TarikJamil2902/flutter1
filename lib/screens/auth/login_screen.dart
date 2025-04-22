@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:new_flutter_app/screens/admin/admin_dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,136 +9,208 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isLoading = false;
-  bool _isAutofill = false;
-  
-  // Static credentials
-  static const String validEmail = 'tj@gmail.com';
-  static const String validPassword = 'tj123456';
+  String selectedRole = 'Admin';
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final GlobalKey<ScaffoldMessengerState> scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
-  void _handleLogin() {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-      
-      // Simulate API call delay
-      Future.delayed(const Duration(seconds: 1), () {
-        if (_emailController.text == validEmail && 
-            _passwordController.text == validPassword) {
-          setState(() => _isLoading = false);
-          Navigator.pushReplacementNamed(context, '/admin');
-        } else {
-          setState(() => _isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Invalid email or password'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      });
+  void _login() {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    if (selectedRole == 'Admin') {
+      if (email == 'admin123' && password == 'admin123') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminDash2()),
+        );
+      } else {
+        _showSnackBar("Invalid Admin credentials");
+      }
+    } else {
+      if (email == 'dis123' && password == 'dis123') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminDash2()),
+        );
+      } else {
+        _showSnackBar("Invalid Distributor credentials");
+      }
     }
   }
 
-  void _handleLongPress() {
+  void _autoFill() {
     setState(() {
-      _isAutofill = true;
-      _emailController.text = validEmail;
-      _passwordController.text = validPassword;
+      if (selectedRole == 'Admin') {
+        emailController.text = 'admin123';
+        passwordController.text = 'admin123';
+      } else {
+        emailController.text = 'dis123';
+        passwordController.text = 'dis123';
+      }
     });
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Inventory\nManagement',
-                style: GoogleFonts.poppins(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
+      key: scaffoldKey,
+      backgroundColor: const Color(0xFF1E2D48),
+      body: Row(
+        children: [
+          // Left Section
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              child: Center(
+                child: RichText(
+                  text: const TextSpan(
+                    text: "The best offer\n",
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "for your business",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.lightBlueAccent,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 48),
-              Form(
-                key: _formKey,
+            ),
+          ),
+          // Right Section
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                width: 400,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        hintText: validEmail, // Show valid email as hint
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                    const Text(
+                      "Login As",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        return null;
-                      },
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _passwordController,
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ChoiceChip(
+                          label: const Text("Admin"),
+                          selected: selectedRole == 'Admin',
+                          onSelected: (_) {
+                            setState(() {
+                              selectedRole = 'Admin';
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 10),
+                        ChoiceChip(
+                          label: const Text("Distributor"),
+                          selected: selectedRole == 'Distributor',
+                          onSelected: (_) {
+                            setState(() {
+                              selectedRole = 'Distributor';
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: emailController,
+                      decoration: const InputDecoration(
+                        labelText: "Email or Phone Number",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        hintText: validPassword, // Show valid password as hint
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                      decoration: const InputDecoration(
+                        labelText: "Password",
+                        border: OutlineInputBorder(),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
                     ),
-                    const SizedBox(height: 24),
-                    _isLoading
-                        ? const CircularProgressIndicator()
-                        : ElevatedButton(
-                            onPressed: _handleLogin,
-                            onLongPress: _handleLongPress,
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(fontSize: 16),
+                    const SizedBox(height: 20),
+                    GestureDetector(
+                      onLongPress: _autoFill,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              188,
+                              216,
+                              244,
                             ),
                           ),
+                          onPressed: _login,
+                          child: Text(
+                            "$selectedRole Log in",
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text.rich(
+                      TextSpan(
+                        text: "Or don't have account : ",
+                        style: const TextStyle(color: Colors.black54),
+                        children: [
+                          WidgetSpan(
+                            child: GestureDetector(
+                              onTap: () {
+                                // Navigate to register page
+                              },
+                              child: const Text(
+                                "Register",
+                                style: TextStyle(
+                                  color: Colors.blueAccent,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }
